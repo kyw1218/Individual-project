@@ -53,7 +53,7 @@ Example `input.json`
 
 #### Chai-1: put the same sequences in the Chai-1 website (https://www.chaidiscovery.com/).
 
-3. Generate topology and energy minimization before inserting the membrane:
+## 3. Generate topology and energy minimization before inserting the membrane:
 
   ```
   gmx pdb2gmx -f weca-glc.pdb -o weca-glc-p2g.pdb
@@ -62,7 +62,7 @@ Example `input.json`
   gmx mdrun -deffnm weca-glc-em -v -ntmpi 1 -c weca-glc-em.pdb
   ```
   
-4. Membrane insertion
+## 4. Membrane insertion
 
    If you use Google Colab for MemprotMD, upload the protein sequence, change the membrane type to 'POPE 7 POPG 2 CARD 1', and then run all. If you use the MemprotMD locally, run the following command after activating the memprotmd environment:
 
@@ -87,7 +87,15 @@ Example `input.json`
 	 save AT-system.pdb, final_cg2at_aligned
    ```
 
-6. Position restarin (10ns)
+## 5. 10ns NPT equilibration under positional restraints
+
+## 6. Production MD run
+
+
+**The MD run will cost more than hours so that the trajectories will be provided in ....**
+
+## 7. Data analysis and post-processing
+   
 
    
 
