@@ -89,6 +89,10 @@ Example `input.json`
 
 ## 5. 10ns NPT equilibration under positional restraints
 
+```
+gmx grompp -f 10ns-pr.mdp -c em.gro -r em.gro -o PR1/pr -maxwarn 2 -n index.ndx
+```
+
 ## 6. Production MD run
 
 
