@@ -99,9 +99,41 @@ gmx grompp -f 10ns-pr.mdp -c em.gro -r em.gro -o PR1/pr -maxwarn 2 -n index.ndx
 **The MD run will cost more than hours so that the trajectories will be provided in ....**
 
 ## 7. Data analysis and post-processing
-   
 
-   
+### 1) Trajectory processing
+After GROMACS writes the raw trajectory, use `gmx trjconv` to center the protein and fix the whole system inside the box. You can also thin the trajectory to ~10 frames to speed up downstream analysis.
+
+   ```
+   gmx trjconv -f md_500.xtc -c md_500.tpr -o md_500_center.xtc -center -pbc res
+   gmx trjconv -f md_500.xtc -c md_500.tpr -o md_500_skip.xtc -center -pbc res -skip 10
+   ```
+
+### 2) RMSD & RMSF calculations
+Calculate RMSD and RMSF for every simulation individually (C-alpha in the structure will be the reference). A full trajectory is recommended for RMSD and RMSF calculations.
+
+```
+gmx rms -f md_500_center.xtc -c md_500.tpr -o rmsd-weca-glc-rep1.xvg -n index.ndx
+gmx rmsf -f md_500_center.xtc -c md_500.tpr -o rmsf-weca-glc-rep1.xvg -n index.ndx -res
+```
+
+### 3) Min dist & number of contacts calculations
+A frame-skipped trajectory is recommended here; it saves time while maintaining sufficient accuracy for analysis.
+
+```
+gmx mindist -f md_500_skip.xtc -s md_500.tpr -n index.ndx -on weca-glc-mindist-rep1.xvg -on weca-glc-numcont-rep1.xvg
+```
+
+### 4) Error bars from Python script
+Different Python scripts will be provided here to calculate the mean values and standard deviations for different structures of three repeats, including RMSD, RMSF, and MINDIST-NUMCONT. You can download the scripts from GitHub. After running the scripts, you will have the plots with error bars showing.
+
+```
+python plot_mul.py
+python rmsf_all.py
+python min_cont.py
+```
+
+
+
 
 
 
