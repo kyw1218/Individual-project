@@ -112,7 +112,7 @@ module load
 ```
 
 ### 1) Trajectory processing
-After GROMACS writes the raw trajectory, use `gmx trjconv` to center the protein and fix the whole system inside the box. You can also trim the trajectory to ~10 frames to speed up downstream analysis. '-f' is 
+After GROMACS writes the raw trajectory, use `gmx trjconv` to center the protein and fix the whole system inside the box. You can also trim the trajectory to ~10 frames to speed up downstream analysis. `-f` is the original trajectory input; `-c` is the binary input file for the MD run, which contains all the information (system topology, molecular coordinates, etc.); `-o` is the output file which is a post-processed trajectory here; `-center` recenters the simulation box so that a chosen group (defined by an index selection) is placed at the center of the box in every frame; `-pbc` rebuilds whole molecules that are broken across periodic boundaries, here we reconstruct molecules based on residues; `-skip` controls how many frames we want to save in the new trajectory file.
 
    ```
    gmx trjconv -f md_500.xtc -c md_500.tpr -o md_500_center.xtc -center -pbc res
@@ -120,7 +120,7 @@ After GROMACS writes the raw trajectory, use `gmx trjconv` to center the protein
    ```
 
 ### 2) RMSD & RMSF calculations
-Calculate RMSD and RMSF for every simulation individually (C-alpha in the structure will be the reference, choosing 3 in the interactive index). A full trajectory is recommended for RMSD and RMSF calculations.
+Calculate RMSD and RMSF for every simulation individually (C-alpha in the structure will be the reference, choosing 3 in the interactive index). A full trajectory is recommended for RMSD and RMSF calculations. `-n` is the index file of different groups in the molecule; `-res` option shows that we calculate per-residue RMSF instead of per-atom. 
 
 ```
 gmx rms -f md_500_center.xtc -c md_500.tpr -o rmsd-weca-glc-rep1.xvg -n index.ndx
@@ -128,14 +128,17 @@ gmx rmsf -f md_500_center.xtc -c md_500.tpr -o rmsf-weca-glc-rep1.xvg -n index.n
 ```
 
 ### 3) Min dist & number of contacts calculations
-A frame-skipped trajectory is recommended here; it saves time while maintaining sufficient accuracy for analysis.
+A frame-skipped trajectory is recommended here; it saves time while maintaining sufficient accuracy for analysis. `-on` 
 
 ```
-gmx mindist -f md_500_skip.xtc -s md_500.tpr -n index.ndx -on weca-glc-mindist-rep1.xvg -on weca-glc-numcont-rep1.xvg
+gmx mindist -f md_500_skip.xtc -s md_500.tpr -n index.ndx -od weca-glc-mindist-rep1.xvg -on weca-glc-numcont-rep1.xvg
 ```
 
 ### 4) Error bars from Python script
 Different Python scripts will be provided here to calculate the mean values and standard deviations for different structures of three repeats, including RMSD, RMSF, and MINDIST-NUMCONT. You can download the scripts from GitHub. After running the scripts, you will have the plots with error bars showing.
+`plot_mul.py` is the Python script to calculate the error bar for the RMSD of multiple groups, need to check and change the file name before running it;
+`rmsf_all.py` is the Python script to calculate the error bar for the RMSF of multiple groups;
+`min_cont.py` is the the Python script to calculate the error bar for the minimum distance and number of contacts of multiple groups.
 
 ```
 python plot_mul.py
