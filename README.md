@@ -96,12 +96,23 @@ gmx grompp -f 10ns-pr.mdp -c em.gro -r em.gro -o PR1/pr -maxwarn 2 -n index.ndx
 ## 6. Production MD run
 
 
-**The MD run will cost more than hours so that the trajectories will be provided in ....**
+**The MD run will cost more than hours, so the trajectories will be provided in a shared folder: /home/lifesci/esrjwj/SRG/Shared/Keyi/PX915-UQ-results**
 
 ## 7. Data analysis and post-processing
 
+If you haven't loaded the GROMACS package before, you need to do the following command line first:
+
+```
+module load GROMACS
+
+OR
+
+module spider GROMACS
+module load
+```
+
 ### 1) Trajectory processing
-After GROMACS writes the raw trajectory, use `gmx trjconv` to center the protein and fix the whole system inside the box. You can also thin the trajectory to ~10 frames to speed up downstream analysis.
+After GROMACS writes the raw trajectory, use `gmx trjconv` to center the protein and fix the whole system inside the box. You can also trim the trajectory to ~10 frames to speed up downstream analysis. '-f' is 
 
    ```
    gmx trjconv -f md_500.xtc -c md_500.tpr -o md_500_center.xtc -center -pbc res
@@ -109,7 +120,7 @@ After GROMACS writes the raw trajectory, use `gmx trjconv` to center the protein
    ```
 
 ### 2) RMSD & RMSF calculations
-Calculate RMSD and RMSF for every simulation individually (C-alpha in the structure will be the reference). A full trajectory is recommended for RMSD and RMSF calculations.
+Calculate RMSD and RMSF for every simulation individually (C-alpha in the structure will be the reference, choosing 3 in the interactive index). A full trajectory is recommended for RMSD and RMSF calculations.
 
 ```
 gmx rms -f md_500_center.xtc -c md_500.tpr -o rmsd-weca-glc-rep1.xvg -n index.ndx
